@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+    font-family: 'Courier New', Courier, monospace;
+}
+.container {
+    display: flex;
+    width: 80%;
+    margin-left: 180px;
+    height: 500px;
+
+    justify-content: space-evenly;
+}
+  
+.left-box,
+.right-box {
+    width: 40%;
+    padding: 20px;
+    font-size: 25px;
+    font-weight: 400;
+    
+    
+
+}
+  
+.left-box {
+    border-right: 1px solid #ccc;
+    background-color: #ccc;
+    
+}
+.right-box{
+    margin-left: 20px;
+    background-color: rgb(157, 186, 211);
+} 
+.product {
+    margin-bottom: 10px;
+}
+  
+.cart-item {
+    margin-bottom: 10px;
+}
+h2{
+    font
+}
+    </style>
+</head>
+<body>
+    <<body>
+      <div class="container">
+          <div class="left-box" id="leftBox">
+            <h2>Products</h2>
+            <div id="productList">
+            </div>
+          </div>
+          <div class="right-box" id="rightBox">
+            <h2>Shopping Cart</h2>
+            <div id="cart">
+            </div>
+            <p id="totalPrice"></p>
+          </div>
+        </div>
+      <SCript>
+          
+          document.addEventListener("DOMContentLoaded", function() {
+            const Products = [
+              { id: 1, name: 'Product-1', price: 100 },
+              { id: 2, name: 'Product-2', price: 200 },
+              { id: 3, name: 'Product-3', price: 300 },
+            ];
+          
+            let cart = [];
+          
+            // Function to render products
+            function renderProducts() {
+              const productList = document.getElementById("productList");
+              productList.innerHTML = "";
+              Products.forEach(product => {
+                const productItem = document.createElement("div");
+                productItem.classList.add("product");
+                productItem.innerHTML = `
+                  <span>${product.name} - $${product.price}</span>
+                  <button onclick="addToCart(${product.id})">+</button>
+                  <span id="quantity_${product.id}">0</span>
+                  <button onclick="removeFromCart(${product.id})">-</button>
+                `;
+                productList.appendChild(productItem);
+              });
+            }
+          
+            // Function to render cart
+            function renderCart() {
+              const cartElement = document.getElementById("cart");
+              cartElement.innerHTML = "";
+              if (cart.length === 0) {
+                cartElement.innerHTML = "<p>No Product added to the cart</p>";
+              } else {
+                cart.forEach(item => {
+                  const cartItem = document.createElement("div");
+                  cartItem.classList.add("cart-item");
+                  cartItem.innerHTML = `
+                    <span>${item.name} - $${item.price}</span>
+                    <span>Quantity: ${item.quantity}</span>
+                  `;
+                  cartElement.appendChild(cartItem);
+                });
+                // Calculate total price
+                const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+                document.getElementById("totalPrice").textContent = `Total Price: $${totalPrice}`;
+              }
+            }
+          
+            window.addToCart = function(productId) {
+              const product = Products.find(p => p.id === productId);
+              const cartItem = cart.find(item => item.id === productId);
+              if (cartItem) {
+                cartItem.quantity++;
+              } else {
+                cart.push({ id: productId, name: product.name, price: product.price, quantity: 1 });
+              }
+              renderCart();
+              renderProducts();
+            }
+          
+            // Function to remove product from cart
+            window.removeFromCart = function(productId) {
+              const index = cart.findIndex(item => item.id === productId);
+              if (index !== -1) {
+                const cartItem = cart[index];
+                cartItem.quantity--;
+                if (cartItem.quantity === 0) {
+                  cart.splice(index, 1);
+                }
+              }
+              renderCart();
+              renderProducts();
+            }
+          
+            renderProducts();
+            renderCart();
+          });
+      </SCript>
+</body>
+</html>
